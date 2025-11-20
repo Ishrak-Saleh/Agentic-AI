@@ -8,6 +8,7 @@ wheels/
 
 # Ignore notebooks
 chatbot.ipynb
+tool_call.ipynb
 
 # Ignore virtual environment
 .venv/
