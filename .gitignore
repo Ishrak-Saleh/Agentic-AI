@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Ignore notebooks
+chatbot.ipynb
+
+# Ignore virtual environment
+.venv/
+env/
+.env
