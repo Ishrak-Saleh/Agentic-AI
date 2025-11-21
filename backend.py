@@ -4,9 +4,7 @@ from dotenv import load_dotenv
 from typing import Annotated
 
 load_dotenv()
-from IPython.display import Image, display
 from typing_extensions import TypedDict
-from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
 from langchain_core.tools import tool
@@ -20,22 +18,6 @@ llm = init_chat_model("google_genai:gemini-2.0-flash")
 class State(TypedDict):
     messages: Annotated[list, add_messages]
     #add_messages is a reducer function, instead of overwriting values it accumulates msgs
-
-"""
-@tool
-def get_weather_data(city: str) -> str:
-    '''Return current weather data for a given city
-    :param city: city name
-    :return: string with weather information
-    '''
-    weather_data = {
-        "Sylhet": {"temperature": 28.5, "condition": "Rainy", "humidity": 85},
-        "Dhaka": {"temperature": 32.1, "condition": "Hazy", "humidity": 70},
-        "Chattogram": {"temperature": 29.8, "condition": "Cloudy", "humidity": 80}
-    }
-    return weather_data.get(city)
-"""
-
 
 @tool
 def get_weather_data(city: str) -> str:
@@ -51,7 +33,7 @@ def get_weather_data(city: str) -> str:
         response = requests.get(BASE_URL, params=params)
         data = response.json()
 
-        if response.status_code == 200:
+        if response.status_code == 200: #HTTP status code for API response
             temp = data['main']['temp']
             humidity = data['main']['humidity']
             condition = data['weather'][0]['description']
@@ -74,14 +56,12 @@ builder.add_node("chatbot", chatbot)
 builder.add_node("tools", ToolNode(tools))
 
 builder.add_edge(START, "chatbot")
-builder.add_conditional_edges("chatbot", tools_condition)   #For only when the tools is required, tools_condition returns the tools or __end__
+builder.add_conditional_edges("chatbot", tools_condition)   #For only when the tools required, tools_condition returns the tools or __end__
 builder.add_edge("tools", "chatbot")
 
 graph = builder.compile()
 
-
-#display(Image(graph.get_graph().draw_mermaid_png()))
-
+print("WeatherBot: Welcome! how can I help you?")
 state = None
 while True:
     in_msg = input("You: ")
@@ -94,4 +74,4 @@ while True:
 
     state = graph.invoke(state)
     last_msg = state["messages"][-1]
-    print("Helper: ", last_msg.content)
+    print("WeatherBot:", last_msg.content)
