@@ -14,3 +14,4 @@ tool_call.ipynb
 .venv/
 env/
 .env
+*.env
