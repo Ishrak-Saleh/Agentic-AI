@@ -59,9 +59,10 @@ builder.add_edge(START, "chatbot")
 builder.add_conditional_edges("chatbot", tools_condition)   #For only when the tools required, tools_condition returns the tools or __end__
 builder.add_edge("tools", "chatbot")
 
+#Create hte graph instance
 graph = builder.compile()
 
-print("WeatherBot: Welcome! how can I help you?")
+"""print("WeatherBot: Welcome! how can I help you?")
 state = None
 while True:
     in_msg = input("You: ")
@@ -74,4 +75,4 @@ while True:
 
     state = graph.invoke(state)
     last_msg = state["messages"][-1]
-    print("WeatherBot:", last_msg.content)
+    print("WeatherBot:", last_msg.content)"""
