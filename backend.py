@@ -61,18 +61,3 @@ builder.add_edge("tools", "chatbot")
 
 #Create hte graph instance
 graph = builder.compile()
-
-"""print("WeatherBot: Welcome! how can I help you?")
-state = None
-while True:
-    in_msg = input("You: ")
-    if in_msg.lower() in ("quit", "exit", "bye"): break
-    if state is None:
-        state: State = {
-            "messages": [{"role": "user", "content": in_msg}]
-        }
-    else: state["messages"].append({"role": "user", "content": in_msg})
-
-    state = graph.invoke(state)
-    last_msg = state["messages"][-1]
-    print("WeatherBot:", last_msg.content)"""
