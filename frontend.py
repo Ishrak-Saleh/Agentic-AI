@@ -14,10 +14,10 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message("assistant", avatar="🌤️"):
-            st.write(message["content"])
+            st.markdown(message["content"])
     else:
         with st.chat_message(message["role"], avatar="👤"):
-            st.write(message["content"])
+            st.markdown(message["content"])
 #Input
 if prompt := st.chat_input("Ask about weather..."):
     #Append user msgs to chat history
@@ -34,4 +34,4 @@ if prompt := st.chat_input("Ask about weather..."):
 
     #Show AI response
     with st.chat_message("assistant", avatar="🌤️"):
-        st.write(response)
+        st.markdown(response)
