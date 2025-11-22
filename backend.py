@@ -19,30 +19,40 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     #add_messages is a reducer function, instead of overwriting values it accumulates msgs
 
+
 @tool
 def get_weather_data(city: str) -> str:
-    '''Get current weather data using OpenWeatherMap API'''
-    API_KEY = os.getenv("OPENWEATHER_API_KEY")
-    BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+    '''Get comprehensive weather data using WeatherAPI'''
+    API_KEY = os.getenv("WEATHER_API_KEY")  #https://www.weatherapi.com/
+    BASE_URL = "http://api.weatherapi.com/v1/current.json"
+
     params = {
+        'key': API_KEY,
         'q': city,
-        'appid': API_KEY,
-        'units': 'metric'
+        'aqi': 'yes'  #Air quality data
     }
+
     try:
         response = requests.get(BASE_URL, params=params)
         data = response.json()
 
-        if response.status_code == 200: #HTTP status code for API response
-            temp = data['main']['temp']
-            humidity = data['main']['humidity']
-            condition = data['weather'][0]['description']
-            return "Weather in " + city + ": " + condition + ", Temperature: " + str(temp) + "°C, Humidity: " + str(humidity) + "%"
-        else:
-            return "Could not fetch weather data for " + city + ". Error: " + data.get('message', 'Unknown error')
-    except Exception as e:
-        return "Error fetching weather data: " + str(e)
+        if 'error' not in data:
+            current = data['current']
+            location = data['location']
 
+            return (
+                    "Weather in " + location['name'] + ", " + location['country'] + ":\n" +
+                    "Condition: " + current['condition']['text'] + "\n" +
+                    "Temperature: " + str(current['temp_c']) + "°C (Feels like: " + str(
+                current['feelslike_c']) + "°C)\n" +
+                    "Humidity: " + str(current['humidity']) + "%\n" +
+                    "Wind: " + str(current['wind_kph']) + " km/h " + current['wind_dir'] + "\n" +
+                    "Visibility: " + str(current['vis_km']) + " km\n" +
+                    "UV Index: " + str(current['uv']) + "\n" +
+                    "Air Quality: " + str(current.get('air_quality', {}).get('us-epa-index', 'N/A'))
+            )
+        else: return "Error: " + data['error']['message']
+    except Exception as e: return "Error fetching weather data: " + str(e)
 
 tools = [get_weather_data]
 llm_with_tools = llm.bind_tools(tools)

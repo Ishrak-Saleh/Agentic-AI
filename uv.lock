@@ -16,6 +16,7 @@ dependencies = [
     { name = "langgraph" },
     { name = "notebook" },
     { name = "python-dotenv" },
+    { name = "requests" },
     { name = "streamlit" },
 ]
 
@@ -26,6 +27,7 @@ requires-dist = [
     { name = "langgraph", specifier = ">=1.0.3" },
     { name = "notebook", specifier = ">=7.5.0" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
+    { name = "requests", specifier = ">=2.32.5" },
     { name = "streamlit", specifier = ">=1.51.0" },
 ]
 
